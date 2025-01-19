@@ -1,6 +1,6 @@
 resource "oci_core_instance" "server_0" {
   compartment_id      = var.compartment_id
-  availability_domain = data.oci_identity_availability_domain.ad_3.name
+  availability_domain = data.oci_identity_availability_domain.ad_1.name
   display_name        = "k3s_server_0"
   shape               = local.ampere_instance_config.shape_id
   source_details {
@@ -30,7 +30,7 @@ resource "oci_core_instance" "server_0" {
 
 resource "oci_core_instance" "server_1" {
   compartment_id      = var.compartment_id
-  availability_domain = data.oci_identity_availability_domain.ad_3.name
+  availability_domain = data.oci_identity_availability_domain.ad_1.name
   display_name        = "k3s_server_1"
   shape               = local.ampere_instance_config.shape_id
   source_details {
