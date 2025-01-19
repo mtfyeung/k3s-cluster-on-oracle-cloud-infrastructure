@@ -8,13 +8,8 @@ variable "fingerprint" {
   type        = string
 }
 
-variable "private_key" {
-  description = "Private key to use for signing"
-  type        = string
-}
-
-variable "private_key_password" {
-  description = "Password for private key to use for signing"
+variable "private_key_path" {
+  description = "Path to Private key file (.pem) to use for signing"
   type        = string
 }
 
