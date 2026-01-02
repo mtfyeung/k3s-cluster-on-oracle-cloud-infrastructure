@@ -30,26 +30,30 @@ variable "cidr_blocks" {
 }
 
 locals {
-  ampere_instance_config = {
-    shape_id = "VM.Standard.A1.Flex"
-    ocpus    = 2
-    ram      = 12
+  # ampere_instance_config = {
+  #   shape_id = "VM.Standard.A1.Flex"
+  #   ocpus    = 2
+  #   ram      = 12
 
-    // Canonical-Ubuntu-22.04-Minimal-aarch64-2022.11.05-0 eu-frankfurt-1
-    source_id   = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaapb65ywn23pl6t6dzc2bk56k4azbvnmsndcr6bfmn5eoei5toc53a"
-    source_type = "image"
+  #   // Canonical-Ubuntu-22.04-Minimal-aarch64-2022.11.05-0 eu-frankfurt-1
+  #   source_id   = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaapb65ywn23pl6t6dzc2bk56k4azbvnmsndcr6bfmn5eoei5toc53a"
+  #   source_type = "image"
 
-    metadata = {
-      "ssh_authorized_keys" = join("\n", var.ssh_authorized_keys)
-    }
-  }
+  #   metadata = {
+  #     "ssh_authorized_keys" = join("\n", var.ssh_authorized_keys)
+  #   }
+  # }
   micro_instance_config = {
     shape_id = "VM.Standard.E2.1.Micro"
     ocpus    = 1
     ram      = 1
 
-    // Canonical-Ubuntu-22.04-Minimal-aarch64-2022.11.05-0 eu-frankfurt-1
-    source_id   = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaapb65ywn23pl6t6dzc2bk56k4azbvnmsndcr6bfmn5eoei5toc53a"
+    // Dynamically found Ubuntu 22.04 Minimal image for current region
+    // Prefer Minimal variant, fallback to first available if not found
+    source_id = try(
+      [for img in data.oci_core_images.ubuntu_22_04_minimal.images : img.id if can(regex("Minimal", img.display_name))][0],
+      data.oci_core_images.ubuntu_22_04_minimal.images[0].id
+    )
     source_type = "image"
 
     metadata = {
